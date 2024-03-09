@@ -2,51 +2,43 @@ package simulation
 
 import (
 	"time"
-
-	"github.com/bcap/nucleon/simulation/module"
 )
 
 type Simulation struct {
-	Reactor                 *module.Reactor
-	PrimaryCoolantLoop      *module.PrimaryCoolantLoop
-	Pressurizer             *module.Pressurizer
-	SteamGenerator          *module.SteamGenerator
-	SecondaryCoolantLoop    *module.SecondaryCoolantLoop
-	Condenser               *module.Condenser
-	Turbine                 *module.Turbine
-	Generator               *module.Generator
-	MainPowerConnection     *module.PowerConnection
-	InternalPowerConnection *module.PowerConnection
-	PowerGrid               *module.PowerGrid
-	AuxiliaryGenerator      *module.AuxiliaryGenerator
+	Reactor              *Reactor
+	PrimaryCoolantLoop   *PrimaryCoolantLoop
+	Pressurizer          *Pressurizer
+	SteamGenerator       *SteamGenerator
+	SecondaryCoolantLoop *SecondaryCoolantLoop
+	Condenser            *Condenser
+	Turbine              *Turbine
+	Generator            *Generator
+	PowerGrid            *PowerGrid
+	AuxiliaryGenerator   *AuxiliaryGenerator
 }
 
 func New() *Simulation {
-	mainPowerConnection := module.NewPowerConnection(nil, 100)
-	internalPowerConnection := module.NewPowerConnection(mainPowerConnection, 100)
-	powerGrid := module.NewPowerGrid(mainPowerConnection)
-	reactor := module.NewReactor(internalPowerConnection)
-	steamGenerator := module.NewSteamGenerator(internalPowerConnection)
-	turbine := module.NewTurbine(steamGenerator)
-	generator := module.NewGenerator(turbine, mainPowerConnection)
-	condenser := module.NewCondenser(internalPowerConnection)
-	pcl := module.NewPrimaryCoolantLoop(internalPowerConnection, reactor, steamGenerator)
-	scl := module.NewSecondaryCoolantLoop(internalPowerConnection, steamGenerator, condenser)
-	pressurizer := module.NewPressurizer(internalPowerConnection, pcl)
-	auxiliaryGenerator := module.NewAuxiliaryGenerator(internalPowerConnection)
+	powerGrid := NewPowerGrid()
+	reactor := NewReactor()
+	steamGenerator := NewSteamGenerator()
+	turbine := NewTurbine(steamGenerator)
+	generator := NewGenerator(turbine)
+	condenser := NewCondenser()
+	pcl := NewPrimaryCoolantLoop(reactor, steamGenerator)
+	scl := NewSecondaryCoolantLoop(steamGenerator, condenser)
+	pressurizer := NewPressurizer(pcl)
+	auxiliaryGenerator := NewAuxiliaryGenerator()
 	return &Simulation{
-		Reactor:                 reactor,
-		PrimaryCoolantLoop:      pcl,
-		Pressurizer:             pressurizer,
-		SteamGenerator:          steamGenerator,
-		SecondaryCoolantLoop:    scl,
-		Condenser:               condenser,
-		Turbine:                 turbine,
-		Generator:               generator,
-		MainPowerConnection:     mainPowerConnection,
-		InternalPowerConnection: internalPowerConnection,
-		PowerGrid:               powerGrid,
-		AuxiliaryGenerator:      auxiliaryGenerator,
+		Reactor:              reactor,
+		PrimaryCoolantLoop:   pcl,
+		Pressurizer:          pressurizer,
+		SteamGenerator:       steamGenerator,
+		SecondaryCoolantLoop: scl,
+		Condenser:            condenser,
+		Turbine:              turbine,
+		Generator:            generator,
+		PowerGrid:            powerGrid,
+		AuxiliaryGenerator:   auxiliaryGenerator,
 	}
 }
 

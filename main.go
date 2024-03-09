@@ -9,7 +9,10 @@ import (
 
 func main() {
 	ticksPerS := 60.0
+	speed := 1.0
+
 	ctx := context.Background()
 	sim := simulation.New()
-	ticker.Run(ctx, ticksPerS, sim)
+	ticker := ticker.New(sim, ticker.WithRate(ticksPerS), ticker.WithSpeed(speed))
+	ticker.Run(ctx)
 }

@@ -1,4 +1,4 @@
-package module
+package simulation
 
 import "time"
 
@@ -7,13 +7,13 @@ type Pressurizer struct {
 	PrimaryCoolantLoop *PrimaryCoolantLoop
 }
 
-func NewPressurizer(conn *PowerConnection, l *PrimaryCoolantLoop) *Pressurizer {
+func NewPressurizer(l *PrimaryCoolantLoop) *Pressurizer {
 	return &Pressurizer{
-		poweredModule:      *newPoweredModule("Pressurizer", conn, 400),
+		poweredModule:      *newPoweredModule("Pressurizer", 400),
 		PrimaryCoolantLoop: l,
 	}
 }
 
 func (l *Pressurizer) Tick(tickNum int64, passed time.Duration) {
-	l.consume(passed)
+	l.poweredModule.Tick(tickNum, passed)
 }

@@ -1,4 +1,4 @@
-package module
+package simulation
 
 import "time"
 
@@ -6,12 +6,12 @@ type Condenser struct {
 	poweredModule
 }
 
-func NewCondenser(conn *PowerConnection) *Condenser {
+func NewCondenser() *Condenser {
 	return &Condenser{
-		poweredModule: *newPoweredModule("Condenser", conn, 100),
+		poweredModule: *newPoweredModule("Condenser", 100),
 	}
 }
 
 func (c *Condenser) Tick(tickNum int64, passed time.Duration) {
-	c.consume(passed)
+	c.poweredModule.Tick(tickNum, passed)
 }

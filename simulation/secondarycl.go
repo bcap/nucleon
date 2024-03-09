@@ -1,4 +1,4 @@
-package module
+package simulation
 
 import "time"
 
@@ -9,14 +9,14 @@ type SecondaryCoolantLoop struct {
 	Condenser      *Condenser
 }
 
-func NewSecondaryCoolantLoop(conn *PowerConnection, sg *SteamGenerator, c *Condenser) *SecondaryCoolantLoop {
+func NewSecondaryCoolantLoop(sg *SteamGenerator, c *Condenser) *SecondaryCoolantLoop {
 	return &SecondaryCoolantLoop{
-		poweredModule:  *newPoweredModule("Secondary Coolant Loop", conn, 100),
+		poweredModule:  *newPoweredModule("Secondary Coolant Loop", 100),
 		SteamGenerator: sg,
 		Condenser:      c,
 	}
 }
 
 func (l *SecondaryCoolantLoop) Tick(tickNum int64, passed time.Duration) {
-	l.consume(passed)
+	l.poweredModule.Tick(tickNum, passed)
 }

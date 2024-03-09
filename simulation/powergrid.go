@@ -1,14 +1,14 @@
-package module
+package simulation
 
 import "time"
 
 type PowerGrid struct {
-	PowerConnection *PowerConnection
+	module
 }
 
-func NewPowerGrid(conn *PowerConnection) *PowerGrid {
+func NewPowerGrid() *PowerGrid {
 	return &PowerGrid{
-		PowerConnection: conn,
+		module: *newModule("Power Grid"),
 	}
 }
 

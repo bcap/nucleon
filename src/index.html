@@ -1,0 +1,128 @@
+<html>
+
+<head>
+    <title>Nucleon</title>
+    <script type="module" src="app.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="section reactor">
+        <table>
+            <tr>
+                <td><span>fastFissionP</span></td>
+                <td><span id="fastFissionP"></span></td>
+            </tr>
+            <tr>
+                <td><span>fastNonLeakageP</span></td>
+                <td><span id="fastNonLeakageP"></span></td>
+            </tr>
+            <tr>
+                <td><span>resonanceEscapeP</span></td>
+                <td><span id="resonanceEscapeP"></span></td>
+            </tr>
+            <tr>
+                <td><span>thermalNonLeakageP</span></td>
+                <td><span id="thermalNonLeakageP"></span></td>
+            </tr>
+            <tr>
+                <td><span>thermalUtilizationP</span></td>
+                <td><span id="thermalUtilizationP"></span></td>
+            </tr>
+            <tr>
+                <td><span>reproductionFactor</span></td>
+                <td><span id="reproductionFactor"></span></td>
+            </tr>
+            <tr>
+                <td><span>kEff</span></td>
+                <td><span id="kEff"></span></td>
+            </tr>
+            <tr>
+                <td><span>reactivity</span></td>
+                <td><span id="reactivity"></span> (<span id="milliNiles"></span> milliNiles)</td>
+            </tr>
+            <tr>
+                <td><span>neutronFlux</span></td>
+                <td><span id="neutronFlux"></span> (<span id="neutronFluxDelta"></span>/s)</td>
+            </tr>
+            <tr>
+                <td><span>fuelTemperature</span></td>
+                <td><span id="fuelTemperature"></span> (<span id="fuelTemperatureDelta"></span> mC/s)</td>
+            </tr>
+            <tr>
+                <td><span>waterTemperature</span></td>
+                <td><span id="waterTemperature"></span> (<span id="waterTemperatureDelta"></span> mC/s)</td>
+            </tr>
+            <tr>
+                <td><span>rodSteps</span></td>
+                <td><span id="rodSteps"></span></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td><button onclick="action.rodUp()">rod up</button></td>
+                <td><button onclick="action.rodUpAll()">rod up (all)</button></td>
+            </tr>
+            <tr>
+                <td><button onclick="action.rodDown()">rod down</button></td>
+                <td><button onclick="action.rodDownAll()">rod down (all)</button></td>
+            </tr>
+        </table>
+    </div>
+    <div class="section chart">
+        <canvas id="chart" width="800" height="400"></canvas>
+    </div>
+    <div class="section simulation">
+        <table>
+            <tr>
+                <td><span>simulationTime</span></td>
+                <td><span id="simulationTime"></span></td>
+            </tr>
+            <tr>
+                <td><span>simulationTicks</span></td>
+                <td><span id="simulationTicks"></span></td>
+            </tr>
+            <tr>
+                <td><span>renderTicks</span></td>
+                <td><span id="renderTicks"></span></td>
+            </tr>
+            <tr>
+                <td>
+
+                </td>
+            </tr>
+        </table>
+
+        <table>
+            <tr>
+                <td>
+                    <span>Simulation rate (<span id="currentTickRate"></span>/s): </span>
+                </td>
+                <td>
+                    <input type="number" id="tickRateInput" value="60">
+                    <button onclick="action.tickRate(document.getElementById('tickRateInput').value)">set</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Render rate (<span id="currentRenderRate"></span>/s): </span>
+                </td>
+                <td>
+                    <input type="number" id="renderRateInput" value="30">
+                    <button onclick="action.renderRate(document.getElementById('renderRateInput').value)">set</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Time factor (<span id="currentTimeFactor"></span>x): </span>
+                </td>
+                <td>
+                    <input type="number" id="timeFactorInput" value="1">
+                    <button onclick="action.timeFactor(document.getElementById('timeFactorInput').value)">set</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>

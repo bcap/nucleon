@@ -1,6 +1,6 @@
 
 import { Action } from './action.js'
-import { Render } from './render.js'
+import { ChartRender, Render } from './render.js'
 import { Simulation } from './simulation/simulation.js'
 import { Ticker } from './ticker/ticker.js'
 import * as physics from './simulation/physics.js'
@@ -9,19 +9,24 @@ class App {
     constructor() {
         this.simulation = new Simulation()
         this.render = new Render(this)
+        this.chartRender = new ChartRender(this)
         this.action = new Action(this)
         
         let tickRate = 60.0
         let renderRate = 30.0
+        let chartRenderRate = 10.0
         let timeFactor = 1.0
+
         this.simulationTicker = new Ticker(this.simulation.tick.bind(this.simulation), tickRate, timeFactor)
         this.renderTicker = new Ticker(this.render.render.bind(this.render), renderRate, timeFactor)
+        this.chartRenderTicker = new Ticker(this.chartRender.render.bind(this.chartRender), chartRenderRate, timeFactor)
     }
 
     async run() {
         await Promise.all([
             this.simulationTicker.run(), 
             this.renderTicker.run(),
+            this.chartRenderTicker.run(),
         ])
     }
 }

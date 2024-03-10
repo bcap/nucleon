@@ -87,6 +87,10 @@
                 <td><span id="renderTicks"></span></td>
             </tr>
             <tr>
+                <td><span>chartRenderTicker</span></td>
+                <td><span id="chartRenderTicks"></span></td>
+            </tr>
+            <tr>
                 <td>
 
                 </td>
@@ -94,6 +98,15 @@
         </table>
 
         <table>
+            <tr>
+                <td>
+                    <span>Time factor (<span id="currentTimeFactor"></span>x): </span>
+                </td>
+                <td>
+                    <input type="number" id="timeFactorInput" value="1">
+                    <button onclick="action.timeFactor(document.getElementById('timeFactorInput').value)">set</button>
+                </td>
+            </tr>
             <tr>
                 <td>
                     <span>Simulation rate (<span id="currentTickRate"></span>/s): </span>
@@ -105,7 +118,7 @@
             </tr>
             <tr>
                 <td>
-                    <span>Render rate (<span id="currentRenderRate"></span>/s): </span>
+                    <span>Info Render rate (<span id="currentRenderRate"></span>/s): </span>
                 </td>
                 <td>
                     <input type="number" id="renderRateInput" value="30">
@@ -114,11 +127,11 @@
             </tr>
             <tr>
                 <td>
-                    <span>Time factor (<span id="currentTimeFactor"></span>x): </span>
+                    <span>Chart Render rate (<span id="currentChartRenderRate"></span>/s): </span>
                 </td>
                 <td>
-                    <input type="number" id="timeFactorInput" value="1">
-                    <button onclick="action.timeFactor(document.getElementById('timeFactorInput').value)">set</button>
+                    <input type="number" id="chartRenderRateInput" value="10">
+                    <button onclick="action.chartRenderRate(document.getElementById('chartRenderRateInput').value)">set</button>
                 </td>
             </tr>
         </table>

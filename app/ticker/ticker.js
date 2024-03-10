@@ -2,6 +2,7 @@
 export class Ticker {
     constructor(tickFn, tickRate = 30.0, timeFactor = 1.0) {
         this.tickFn = tickFn
+        this.ticks = 0
         this.setRate(tickRate, timeFactor)
     }
 
@@ -12,14 +13,13 @@ export class Ticker {
     }
 
     async run() {
-        let tickNum = 0 
         let lastTickAt = Date.now()
         while (true) {
             await new Promise(r => setTimeout(r, this.sleepTimeMs));
             let now = Date.now()
             let timePassed = (now - lastTickAt) * this.timeFactor
-            tickNum += 1
-            this.tickFn(tickNum, timePassed)
+            this.ticks += 1
+            this.tickFn(this.ticks, timePassed)
             lastTickAt = now
         }
     }

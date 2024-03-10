@@ -22,16 +22,21 @@ export class Action {
         this.reactor.moveControlRod(-Infinity)
     }
 
+    tickRate(value) {
+        this.app.simulationTicker.setRate(Number(value), this.app.simulationTicker.timeFactor)
+    }
+
     renderRate(value) {
         this.app.renderTicker.setRate(Number(value), this.app.renderTicker.timeFactor)
     }
 
-    tickRate(value) {
-        this.app.simulationTicker.setRate(Number(value), this.app.simulationTicker.timeFactor)
+    chartRenderRate(value) {
+        this.app.chartRenderTicker.setRate(Number(value), this.app.chartRenderTicker.timeFactor)
     }
 
     timeFactor(value) {
         this.app.simulationTicker.setRate(this.app.simulationTicker.tickRate, Number(value))
         this.app.renderTicker.setRate(this.app.renderTicker.tickRate, Number(value))
+        this.app.chartRenderTicker.setRate(this.app.chartRenderTicker.tickRate, Number(value))
     }
 }

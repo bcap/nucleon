@@ -6,8 +6,6 @@ export class Render {
         this.app = app
         this.simulation = app.simulation
         this.reactor = this.simulation.reactor
-        this.chart = new ReactorChart("chart", 60_000)
-        this.totalTimePassed = 0
     }
 
     render(tickNum, timePassed) {
@@ -33,21 +31,29 @@ export class Render {
 
         // simulation/render ticks
         setDuration("simulationTime", this.simulation.timePassed)
-        setNumber("simulationTicks", this.simulation.ticks, 0)
-        setNumber("renderTicks", tickNum, 0)
+        setNumber("simulationTicks", this.app.simulationTicker.ticks, 0)
+        setNumber("renderTicks", this.app.renderTicker.ticks, 0)
+        setNumber("chartRenderTicks", this.app.chartRenderTicker.ticks, 0)
+        setNumber("currentTimeFactor", this.app.simulationTicker.timeFactor, 0)
         setNumber("currentTickRate", this.app.simulationTicker.tickRate, 0)
         setNumber("currentRenderRate", this.app.renderTicker.tickRate, 0)
-        setNumber("currentTimeFactor", this.app.simulationTicker.timeFactor, 0)
+        setNumber("currentChartRenderRate", this.app.chartRenderTicker.tickRate, 0)
+    }
+}
 
-        // chart
-        this.renderChart()
+export class ChartRender {
+    constructor(app) {
+        this.app = app
+        this.simulation = app.simulation
+        this.reactor = this.simulation.reactor
+        this.chart = new ReactorChart("chart", 60_000)
     }
 
-    renderChart() {
+    render(tickNum, timePassed) {
         this.chart.add(
-            this.totalTimePassed, 
-            this.reactor.neutronFlux, 
-            this.reactor.fuelTemperature, 
+            this.simulation.timePassed,
+            this.reactor.neutronFlux,
+            this.reactor.fuelTemperature,
             this.reactor.waterTemperature,
             this.reactor.controlRodPosition,
         )

@@ -2,7 +2,9 @@
 
 Playing around with simulating a Pressurized Water Reactor (PWR)
 
-Hosted at https://bcap.github.io/nucleon/app/
+Try it out at https://bcap.github.io/nucleon/app/
+
+github: https://github.com/bcap/nucleon
 
 ## Resources:
 

@@ -1,8 +1,8 @@
 
 export function heatTransfer(temperature1, temperature2, ratio, seconds) {
     const timeAdjustedRatio = 1 - Math.pow(1 - ratio, seconds)
-    const delta = temperature1 - temperature2
-    const transfer = delta * timeAdjustedRatio
+    const deltaMidpoint = (temperature1 - temperature2) / 2
+    const transfer = deltaMidpoint * timeAdjustedRatio
     return [temperature1 - transfer, temperature2 + transfer, transfer]
 }
 

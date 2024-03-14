@@ -11,6 +11,9 @@ export class Reactor {
 
         this.reactivity = 0
         this.kEff = 0
+        this.medianNeutronLifetimeMs = 100  // 100ms
+        this.period = Infinity
+        this.startupRate = Infinity
 
         this.minNeutronFlux = 1000
         this.neutronFlux = this.minNeutronFlux
@@ -30,7 +33,6 @@ export class Reactor {
 
         this.neutronsPerDegree = 10_000_000_000  // 10 billion neutrons to raise fuel temperature by 1 degree
         this.resonanceEscapeDropPerDegree = 1 / 20000  // emulates Fuel Temperature Coefficient (FTC)
-        this.medianNeutronLifetimeMs = 100  // 100ms
 
         this.fuelToWaterHeatTransferRatio = 0.08 // 8% per second
         this.waterToEnvironmentHeatTransferRatio = 0.22 // 22% per second
@@ -52,6 +54,7 @@ export class Reactor {
             }
         }
 
+        // https://www.nuclear-power.com/nuclear-power/reactor-physics/nuclear-fission-chain-reaction/six-factor-formula-effective-multiplication-factor/
         this.thermalUtilizationP = 0.688 + (0.0006 * this.controlRodPosition)
         this.resonanceEscapeP = 0.75 - ((this.fuelTemperature - 25) * this.resonanceEscapeDropPerDegree)
         this.kEff =
@@ -61,7 +64,15 @@ export class Reactor {
             this.thermalNonLeakageP *
             this.thermalUtilizationP *
             this.reproductionFactor
+
+        // https://www.nuclear-power.com/nuclear-power/reactor-physics/nuclear-fission-chain-reaction/reactivity/
         this.reactivity = (this.kEff - 1) / this.kEff
+        // https://www.nuclear-power.com/nuclear-power/reactor-physics/nuclear-fission-chain-reaction/reactivity/reactor-period-2/
+        this.period = this.medianNeutronLifetimeMs / 1000 / (this.kEff - 1)
+        // https://www.nuclear-power.com/nuclear-power/reactor-physics/nuclear-fission-chain-reaction/reactivity/doubling-time/
+        this.doublingTime = this.period * 0.6932
+        // https://www.nuclear-power.com/nuclear-power/reactor-physics/nuclear-fission-chain-reaction/reactivity/startup-rate-sur/
+        this.startupRate = 26.06 / this.period
 
         const generations = timePassedMs / this.medianNeutronLifetimeMs;
         const timedKEff = Math.pow(this.kEff, generations)

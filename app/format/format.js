@@ -33,15 +33,20 @@ export function formatBigNumber(value, round = 2, plus = false) {
 }
 
 export function formatDuration(durationMillis) {
+    let sign = ""
+    if (durationMillis < 0) {
+        sign = "-"
+        durationMillis = -durationMillis
+    }
     const totalSeconds = durationMillis / 1000
     const totalMinutes = totalSeconds / 60
     const totalHours = totalMinutes / 60
 
-    const millis = String((durationMillis % 1000).toFixed(0)).padStart(3, '0')
-    const seconds = String((totalSeconds % 60).toFixed(0)).padStart(2, '0')
-    const minutes = String((totalMinutes % 60).toFixed(0)).padStart(2, '0')
-    const hours = String(totalHours.toFixed(0)).padStart(2, '0')
+    const millis = String(Math.floor(durationMillis % 1000)).padStart(3, '0')
+    const seconds = String(Math.floor(totalSeconds % 60)).padStart(2, '0')
+    const minutes = String((Math.floor(totalMinutes % 60))).padStart(2, '0')
+    const hours = String(Math.floor(totalHours)).padStart(2, '0')
 
-    const time = `${hours}:${minutes}:${seconds}.${millis}`
+    const time = `${sign}${hours}:${minutes}:${seconds}.${millis}`
     return time
 }

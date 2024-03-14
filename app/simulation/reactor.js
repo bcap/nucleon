@@ -81,16 +81,31 @@ export class Reactor {
             neutronFlux = this.minNeutronFlux;
         }
         this.neutronFluxDelta = (neutronFlux - this.neutronFlux) / secs
-        this.neutronFlux = neutronFlux;
-
+        this.neutronFlux = neutronFlux
 
         // fuel and water thermal dynamics
         let fuelTemperature = this.fuelTemperature;
         let waterTemperature = this.waterTemperature;
 
+        //
+        // Option 1:
+        // Slow feedback loop from FTC: Bouncy Reactor, snakes around 0 reactivity, eventually converges
+        //
         // increase 1 degree of fuel temperature by every neutronsPerDegree neutrons
-        const fuelTempIncrease = this.neutronFlux / this.neutronsPerDegree * secs;
-        fuelTemperature += fuelTempIncrease;
+        const fuelTempIncrease = this.neutronFlux / this.neutronsPerDegree * secs
+        if (fuelTempIncrease > 0) {
+            fuelTemperature += fuelTempIncrease
+        }
+
+        //
+        // Option 2:
+        // Fast feedback loop from FTC: Reactor quickly converges on zero reactivity
+        //
+        // const targetFuelTemperature = 25 + this.neutronFlux / this.neutronsPerDegree;
+        // const [, , transfer] = heatTransfer(targetFuelTemperature, fuelTemperature, 0.1, secs);
+        // if (transfer > 0) {
+        //     fuelTemperature = targetFuelTemperature;
+        // }
 
         // transfer of heat from fuel to water
         [fuelTemperature, waterTemperature,] = heatTransfer(fuelTemperature, waterTemperature, this.fuelToWaterHeatTransferRatio, secs);

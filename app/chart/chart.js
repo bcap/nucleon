@@ -53,7 +53,7 @@ export class ReactorChart {
                         suggestedMax: this.maxTimeWindowMs / 1000,
                         bounds: 'data',
                         ticks: {
-                            display: true,
+                            display: false,
                             precision: 0,
                             stepSize: 1,
                             autoSkip: false,
@@ -133,6 +133,13 @@ export class ReactorChart {
         if (datasetFull) {
             this.chart.options.scales.x.min = this.times[0] / 1000
             this.chart.options.scales.x.max = this.times[this.times.length - 1] / 1000
+        }
+        if (neutronFlux > this.chart.options.scales['neutrons'].suggestedMax) {
+            this.chart.options.scales['neutrons'].suggestedMax = neutronFlux * 1.1
+        }
+        const maxTemp = Math.max(this.fuelTemperature, this.waterTemperature)
+        if (maxTemp > this.chart.options.scales['temperature'].suggestedMax) {
+            this.chart.options.scales['temperature'].suggestedMax = maxTemp * 1.1
         }
         this.update()
     }

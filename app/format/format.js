@@ -11,19 +11,25 @@ export function formatNumber(value, round, plus = false) {
     return String(value)
 }
 
+const units  = [
+    { symbol: "K", value: 1_000 },
+    { symbol: "M", value: 1_000_000 },
+    { symbol: "B", value: 1_000_000_000 },
+    { symbol: "T", value: 1_000_000_000_000 },
+    { symbol: "P", value: 1_000_000_000_000_000 },
+].sort((a, b) => a.value - b.value)
 
 export function formatBigNumber(value, round = 2, plus = false) {
     const abs = Math.abs(value)
     let valueStr;
-    if (abs >= 1_000_000_000_000) {
-        valueStr = String((value / 1_000_000_000_000).toFixed(round)) + "T"
-    } else if (abs >= 1_000_000_000) {
-        valueStr = String((value / 1_000_000_000).toFixed(round)) + "B"
-    } else if (abs >= 1_000_000) {
-        valueStr = String((value / 1_000_000).toFixed(round)) + "M"
-    } else if (abs >= 1_000) {
-        valueStr = String((value / 1_000).toFixed(round)) + "K"
-    } else {
+    for (let i = units.length - 1; i >= 0; i--) {
+        const item = units[i]
+        if (abs >= item.value) {
+            valueStr = String((value / item.value).toFixed(round)) + item.symbol
+            break
+        }
+    }
+    if (!valueStr) {
         valueStr = String(value.toFixed(0))
     }
     if (plus && value >= 0) {

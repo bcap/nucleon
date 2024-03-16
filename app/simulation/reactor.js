@@ -32,7 +32,7 @@ export class Reactor {
         this.waterTemperatureDelta = 0
 
         this.neutronsPerDegree = 10_000_000_000  // 10 billion neutrons to raise fuel temperature by 1 degree
-        this.resonanceEscapeDropPerDegree = 1 / 20000  // emulates Fuel Temperature Coefficient (FTC)
+        this.resonanceEscapeDropPerFuelDegree = 1 / 20000  // emulates Fuel Temperature Coefficient (FTC)
 
         this.fuelToWaterHeatTransferRatio = 0.08 // 8% per second
         this.waterToEnvironmentHeatTransferRatio = 0.22 // 22% per second
@@ -56,7 +56,7 @@ export class Reactor {
 
         // https://www.nuclear-power.com/nuclear-power/reactor-physics/nuclear-fission-chain-reaction/six-factor-formula-effective-multiplication-factor/
         this.thermalUtilizationP = 0.688 + (0.0006 * this.controlRodPosition)
-        this.resonanceEscapeP = 0.75 - ((this.fuelTemperature - 25) * this.resonanceEscapeDropPerDegree)
+        this.resonanceEscapeP = 0.75 - ((this.fuelTemperature - 25) * this.resonanceEscapeDropPerFuelDegree)
         this.kEff =
             this.fastFissionP *
             this.fastNonLeakageP *

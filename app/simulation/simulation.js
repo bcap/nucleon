@@ -8,8 +8,9 @@ export class Simulation {
     }
 
     tick(tickNum, timePassed) {
-        this.reactor.tick(tickNum, timePassed)
         this.timePassed += timePassed
         this.ticks = tickNum
+
+        this.reactor.tick(tickNum, timePassed)
     }
 }

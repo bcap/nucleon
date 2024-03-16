@@ -3,7 +3,7 @@ import { Action } from './action.js'
 import { ChartRender, Render } from './render.js'
 import { Simulation } from './simulation/simulation.js'
 import { Ticker } from './ticker/ticker.js'
-import * as physics from './simulation/physics.js'
+import * as physics from './physics/physics.js'
 
 class App {
     constructor() {

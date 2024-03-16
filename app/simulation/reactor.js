@@ -1,5 +1,5 @@
 
-import { heatTransfer } from "./physics.js"
+import { heatTransfer } from "../physics/physics.js"
 
 export class Reactor {
     constructor() {

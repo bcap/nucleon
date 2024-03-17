@@ -36,7 +36,7 @@ export class Action {
         this.reactor.moveControlRod(-Infinity)
     }
 
-    tickRate(value) {
+    simulationRate(value) {
         this.app.simulationTicker.setRate(Number(value))
     }
 

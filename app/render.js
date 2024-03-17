@@ -58,9 +58,12 @@ export class Render {
         setNumber("renderTicks", this.app.renderTicker.ticks, 0)
         setNumber("chartRenderTicks", this.app.chartRenderTicker.ticks, 0)
         setNumber("currentTimeFactor", this.app.simulationTicker.timeFactor, 0)
-        setNumber("currentTickRate", this.app.simulationTicker.tickRate, 0)
+        setNumber("simulationTickerRate", this.app.simulationTicker.tickRate, 0)
+        setNumber("simulationTickerLoad", this.app.simulationTicker.loadPct, 1)
         setNumber("currentRenderRate", this.app.renderTicker.tickRate, 0)
+        setNumber("renderTickerLoad", this.app.renderTicker.loadPct, 1)
         setNumber("currentChartRenderRate", this.app.chartRenderTicker.tickRate, 0)
+        setNumber("chartRenderTickerLoad", this.app.chartRenderTicker.loadPct, 1)
     }
 }
 

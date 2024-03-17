@@ -14,12 +14,12 @@ class App {
         
         let tickRate = 60.0
         let renderRate = 30.0
-        let chartRenderRate = 10.0
+        let chartRenderRate = 30.0
         let timeFactor = 1.0
 
-        this.simulationTicker = new Ticker(this.simulation.tick.bind(this.simulation), tickRate, timeFactor)
-        this.renderTicker = new Ticker(this.render.render.bind(this.render), renderRate, timeFactor)
-        this.chartRenderTicker = new Ticker(this.chartRender.render.bind(this.chartRender), chartRenderRate, timeFactor)
+        this.simulationTicker = new Ticker("simulation", this.simulation.tick.bind(this.simulation), tickRate, timeFactor)
+        this.renderTicker = new Ticker("info", this.render.render.bind(this.render), renderRate, timeFactor)
+        this.chartRenderTicker = new Ticker("chart", this.chartRender.render.bind(this.chartRender), chartRenderRate, timeFactor)
     }
 
     async run() {

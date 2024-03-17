@@ -186,6 +186,7 @@
     </div>
     <div class="section simulation">
         <h3>Simulation</h3>
+
         <table>
             <tr>
                 <td><span>simulationTime</span></td>
@@ -233,11 +234,14 @@
             </tr>
             <tr>
                 <td>
-                    <span>Simulation rate (<span id="currentTickRate"></span>/s): </span>
+                    <span>Simulation rate (<span id="simulationTickerRate"></span>/s): </span>
                 </td>
                 <td>
-                    <input type="number" id="tickRateInput" value="60">
-                    <button onclick="action.tickRate(document.getElementById('tickRateInput').value)">set</button>
+                    <input type="number" id="simulationRateInput" value="60">
+                    <button onclick="action.simulationRate(document.getElementById('simulationRateInput').value)">set</button>
+                </td>
+                <td>
+                    <span>load: <span id="simulationTickerLoad"></span>%</span>
                 </td>
             </tr>
             <tr>
@@ -248,15 +252,21 @@
                     <input type="number" id="renderRateInput" value="30">
                     <button onclick="action.renderRate(document.getElementById('renderRateInput').value)">set</button>
                 </td>
+                <td>
+                    <span>load: <span id="renderTickerLoad"></span>%</span>
+                </td>
             </tr>
             <tr>
                 <td>
                     <span>Chart Render rate (<span id="currentChartRenderRate"></span>/s): </span>
                 </td>
                 <td>
-                    <input type="number" id="chartRenderRateInput" value="10">
+                    <input type="number" id="chartRenderRateInput" value="30">
                     <button
                         onclick="action.chartRenderRate(document.getElementById('chartRenderRateInput').value)">set</button>
+                </td>
+                <td>
+                    <span>load: <span id="chartRenderTickerLoad"></span>%</span>
                 </td>
             </tr>
         </table>

@@ -55,6 +55,48 @@
             If the chart rendering or the information rendering is too slow, you can decrease their tick rates.
         </p>
     </div>
+    <div class="section pressurizer">
+        <table>
+            <tr>
+                <td><span>heater</span></td>
+                <td><span id="heaterState"></span></td>
+            </tr>
+            <tr>
+                <td><span>power</span></td>
+                <td><span id="heaterPower"></span></td>
+            </tr>
+            <tr>
+                <td><span>heater temperature</span></td>
+                <td><span id="heaterTemperature"></span> C</td>
+            </tr>
+            <tr>
+                <td><span>water temperature</span></td>
+                <td><span id="heaterWaterTemperature"></span> C</td>
+            </tr>
+            <tr>
+                <td><span>pressure</span></td>
+                <td><span id="pressure"></span> bar</td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td><button onclick="action.heaterState(true)">heater on</button></td>
+                <td><button onclick="action.heaterState(false)">heater off</button></td>
+            </tr>
+            <tr>
+                <td><button onclick="action.heaterAdjustPower(1000)">+1000 power</button></td>
+                <td><button onclick="action.heaterAdjustPower(100)">+100 power</button></td>
+                <td><button onclick="action.heaterAdjustPower(10)">+10 power</button></td>
+                <td><button onclick="action.heaterAdjustPower(1)">+1 power</button></td>
+            </tr>
+            <tr>
+                <td><button onclick="action.heaterAdjustPower(-1000)">-1000 power</button></td>
+                <td><button onclick="action.heaterAdjustPower(-100)">-100 power</button></td>
+                <td><button onclick="action.heaterAdjustPower(-10)">-10 power</button></td>
+                <td><button onclick="action.heaterAdjustPower(-1)">-1 power</button></td>
+            </tr>
+        </table>
+    </div>
     <div class="section reactor">
         <table>
             <tr>
@@ -107,11 +149,19 @@
             </tr>
             <tr>
                 <td><span>fuelTemperature</span></td>
-                <td><span id="fuelTemperature"></span> (<span id="fuelTemperatureDelta"></span> mC/s)</td>
+                <td><span id="fuelTemperature"></span>C (<span id="fuelTemperatureDelta"></span> mC/s)</td>
             </tr>
             <tr>
                 <td><span>waterTemperature</span></td>
-                <td><span id="waterTemperature"></span> (<span id="waterTemperatureDelta"></span> mC/s)</td>
+                <td><span id="waterTemperature"></span>C (<span id="waterTemperatureDelta"></span> mC/s)</td>
+            </tr>
+            <tr>
+                <td><span>pressure</span></td>
+                <td><span id="reactorPressure"></span> bar (water boils at <span id="reactorBoilingPoint"></span>C)</td>
+            </tr>
+            <tr>
+                <td><span>water state</span></td>
+                <td><span id="reactorWaterState"></span> at <span id="reactorWaterDensity"></span> cm^3/g</td>
             </tr>
             <tr>
                 <td><span>rodSteps</span></td>

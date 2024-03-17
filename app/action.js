@@ -4,6 +4,15 @@ export class Action {
         this.app = app
         this.simulation = app.simulation
         this.reactor = this.simulation.reactor
+        this.pressurizer = this.simulation.pressurizer
+    }
+
+    heaterState(on) {
+        this.pressurizer.heaterOn = on
+    }
+    
+    heaterAdjustPower(delta) {
+        this.pressurizer.adjustPower(delta)
     }
 
     rodUp() {

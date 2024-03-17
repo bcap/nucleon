@@ -10,7 +10,6 @@ export function heatTransfer(temperature1, temperature2, ratio, seconds) {
     return [temperature1 - transfer, temperature2 + transfer, transfer]
 }
 
-
 const antoineCoefficients = {
     t0to100: {
         A: 8.07131,
@@ -59,28 +58,15 @@ export function waterBoilingTemperatureByPressure(pressure) {
     return temperature
 }
 
-export function waterDensity(pressure, temperature) {
-    const pLowTLow = waterDensityStep(pressure, temperature)
-    const pHighTLow = waterDensityStep(pressure + 1, temperature)
-    const pLowTHigh = waterDensityStep(pressure, temperature + 1)
-    if (pLowTLow === undefined || pHighTLow === undefined || pLowTHigh === undefined) {
-        return undefined
-    }
-    const pressureFraction = pressure - Math.floor(pressure)
-    const pressureDelta = (pHighTLow - pLowTLow) * pressureFraction
-    const temperatureFraction = temperature - Math.floor(temperature)
-    const temperatureDelta = (pLowTHigh - pLowTLow) * temperatureFraction
-    return pLowTLow + pressureDelta + temperatureDelta
-}
+export const minPressure = 1
+export const maxPressure = 160
+export const minTemperature = 1
+export const maxTemperature = 360
 
-function waterDensityStep(pressure, temperature) {
-    const temperatureTable = waterDensityTable[Math.trunc(pressure) - 1]
-    if (!temperatureTable) {
-        return undefined
-    }
-    const density = temperatureTable[Math.trunc(temperature) - 1]
-    if (!density) {
-        return undefined
-    }
+export function waterDensity(pressure, temperature) {
+    pressure = Math.max(minPressure, Math.min(Math.round(pressure), maxPressure))
+    temperature = Math.max(minTemperature, Math.min(Math.round(temperature), maxTemperature))
+    const temperatureTable = waterDensityTable[pressure - 1]
+    const density = temperatureTable[temperature - 1]
     return density
 }

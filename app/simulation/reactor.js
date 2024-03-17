@@ -1,5 +1,5 @@
 
-import { heatTransfer } from "../physics/physics.js"
+import { heatTransfer, waterDensity, waterBoilingTemperatureByPressure } from "../physics/physics.js"
 
 export class Reactor {
     constructor() {
@@ -17,7 +17,6 @@ export class Reactor {
 
         this.minNeutronFlux = 1000
         this.neutronFlux = this.minNeutronFlux
-        this.neutronFluxDelta = 0
 
         this.fastFissionP = 1.03
         this.fastNonLeakageP = 0.95
@@ -28,14 +27,17 @@ export class Reactor {
 
         this.fuelTemperature = 25
         this.waterTemperature = 25
-        this.fuelTemperatureDelta = 0
-        this.waterTemperatureDelta = 0
 
         this.neutronsPerDegree = 10_000_000_000  // 10 billion neutrons to raise fuel temperature by 1 degree
         this.resonanceEscapeDropPerFuelDegree = 1 / 20000  // emulates Fuel Temperature Coefficient (FTC)
 
         this.fuelToWaterHeatTransferRatio = 0.08 // 8% per second
         this.waterToEnvironmentHeatTransferRatio = 0.22 // 22% per second
+
+        this.pressure = 1
+        this.waterDensity = waterDensity(this.pressure, this.waterTemperature)
+        this.boilingPoint = waterBoilingTemperatureByPressure(this.pressure)
+        this.waterState = "liquid"
     }
 
     tick(tickNum, timePassedMs) {
@@ -76,16 +78,12 @@ export class Reactor {
 
         const generations = timePassedMs / this.medianNeutronLifetimeMs;
         const timedKEff = Math.pow(this.kEff, generations)
-        let neutronFlux = this.neutronFlux * timedKEff;
-        if (neutronFlux < this.minNeutronFlux) {
-            neutronFlux = this.minNeutronFlux;
+        this.neutronFlux *= timedKEff;
+        if (this.neutronFlux < this.minNeutronFlux) {
+            this.neutronFlux = this.minNeutronFlux
         }
-        this.neutronFluxDelta = (neutronFlux - this.neutronFlux) / secs
-        this.neutronFlux = neutronFlux
 
         // fuel and water thermal dynamics
-        let fuelTemperature = this.fuelTemperature;
-        let waterTemperature = this.waterTemperature;
 
         //
         // Option 1:
@@ -94,7 +92,7 @@ export class Reactor {
         // increase 1 degree of fuel temperature by every neutronsPerDegree neutrons
         const fuelTempIncrease = this.neutronFlux / this.neutronsPerDegree * secs
         if (fuelTempIncrease > 0) {
-            fuelTemperature += fuelTempIncrease
+            this.fuelTemperature += fuelTempIncrease
         }
 
         //
@@ -102,22 +100,26 @@ export class Reactor {
         // Fast feedback loop from FTC: Reactor quickly converges on zero reactivity
         //
         // const targetFuelTemperature = 25 + this.neutronFlux / this.neutronsPerDegree;
-        // const [, , transfer] = heatTransfer(targetFuelTemperature, fuelTemperature, 0.1, secs);
+        // const [, , transfer] = heatTransfer(targetFuelTemperature, this.fuelTemperature, 0.1, secs);
         // if (transfer > 0) {
-        //     fuelTemperature = targetFuelTemperature;
+        //     this.fuelTemperature = targetFuelTemperature;
         // }
 
         // transfer of heat from fuel to water
-        [fuelTemperature, waterTemperature,] = heatTransfer(fuelTemperature, waterTemperature, this.fuelToWaterHeatTransferRatio, secs);
+        [this.fuelTemperature, this.waterTemperature,] = heatTransfer(this.fuelTemperature, this.waterTemperature, this.fuelToWaterHeatTransferRatio, secs);
 
         // water heat loss to environment
-        [waterTemperature, ,] = heatTransfer(waterTemperature, 25, this.waterToEnvironmentHeatTransferRatio, secs);
+        [this.waterTemperature, ,] = heatTransfer(this.waterTemperature, 25, this.waterToEnvironmentHeatTransferRatio, secs);
 
-        // update temperatures
-        this.fuelTemperatureDelta = (fuelTemperature - this.fuelTemperature) / secs;
-        this.waterTemperatureDelta = (waterTemperature - this.waterTemperature) / secs;
-        this.fuelTemperature = fuelTemperature;
-        this.waterTemperature = waterTemperature;
+        // set density and state
+        this.boilingPoint = waterBoilingTemperatureByPressure(this.pressure)
+        if (this.waterTemperature > this.boilingPoint) {
+            this.waterState = "steam"
+            this.waterDensity = waterDensity(Math.min(Math.floor(this.pressure), 160), this.waterTemperature)
+        } else {
+            this.waterState = "liquid"
+            this.waterDensity = waterDensity(Math.min(Math.ceil(this.pressure), 160), this.waterTemperature)
+        }
     }
 
     moveControlRod(stepsDelta) {
@@ -137,5 +139,31 @@ export class Reactor {
             desiredPosition = this.maxRodPosition
         }
         this.desiredControlRodPosition = Math.round(desiredPosition)
+    }
+}
+
+export class ReactorDelta {
+    constructor(reactor) {
+        this.reactor = reactor
+
+        this.neutronFluxDelta = 0
+        this.fuelTemperatureDelta = 0
+        this.waterTemperatureDelta = 0
+
+        this.setReferenceValues()
+    }
+
+    tick(tickNum, timePassedMs) {
+        const secs = timePassedMs / 1000
+        this.neutronFluxDelta = (this.reactor.neutronFlux - this.neutronFlux) / secs
+        this.fuelTemperatureDelta = (this.reactor.fuelTemperature - this.fuelTemperature) / secs
+        this.waterTemperatureDelta = (this.reactor.waterTemperature - this.waterTemperature) / secs
+        this.setReferenceValues()
+    }
+
+    setReferenceValues() {
+        this.neutronFlux = this.reactor.neutronFlux
+        this.fuelTemperature = this.reactor.fuelTemperature
+        this.waterTemperature = this.reactor.waterTemperature
     }
 }

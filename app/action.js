@@ -5,6 +5,11 @@ export class Action {
         this.simulation = app.simulation
         this.reactor = this.simulation.reactor
         this.pressurizer = this.simulation.pressurizer
+        this.tickers = () => [
+            this.app.simulationTicker, 
+            this.app.renderTicker, 
+            this.app.chartRenderTicker,
+        ]
     }
 
     heaterState(on) {
@@ -32,20 +37,26 @@ export class Action {
     }
 
     tickRate(value) {
-        this.app.simulationTicker.setRate(Number(value), this.app.simulationTicker.timeFactor)
+        this.app.simulationTicker.setRate(Number(value))
     }
 
     renderRate(value) {
-        this.app.renderTicker.setRate(Number(value), this.app.renderTicker.timeFactor)
+        this.app.renderTicker.setRate(Number(value))
     }
 
     chartRenderRate(value) {
-        this.app.chartRenderTicker.setRate(Number(value), this.app.chartRenderTicker.timeFactor)
+        this.app.chartRenderTicker.setRate(Number(value))
     }
 
     timeFactor(value) {
-        this.app.simulationTicker.setRate(this.app.simulationTicker.tickRate, Number(value))
-        this.app.renderTicker.setRate(this.app.renderTicker.tickRate, Number(value))
-        this.app.chartRenderTicker.setRate(this.app.chartRenderTicker.tickRate, Number(value))
+        this.tickers().forEach(ticker => ticker.setFactor(Number(value)))
+    }
+
+    pause() {
+        this.tickers().forEach(ticker => ticker.pause())
+    }
+
+    play() {
+        this.tickers().forEach(ticker => ticker.play())
     }
 }

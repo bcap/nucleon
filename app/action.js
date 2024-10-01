@@ -37,19 +37,19 @@ export class Action {
     }
 
     simulationRate(value) {
-        this.app.simulationTicker.setRate(Number(value))
+        ifGreaterThanZero(value, (value) => this.app.simulationTicker.setRate(value))
     }
 
     renderRate(value) {
-        this.app.renderTicker.setRate(Number(value))
+        ifGreaterThanZero(value, (value) => this.app.renderTicker.setRate(value))
     }
 
     chartRenderRate(value) {
-        this.app.chartRenderTicker.setRate(Number(value))
+        ifGreaterThanZero(value, (value) => this.app.chartRenderTicker.setRate(value))
     }
 
     timeFactor(value) {
-        this.tickers().forEach(ticker => ticker.setFactor(Number(value)))
+        this.tickers().forEach(ticker => ifGreaterThanZero(value, (value) => ticker.setFactor(value)))
     }
 
     pause() {
@@ -58,5 +58,12 @@ export class Action {
 
     play() {
         this.tickers().forEach(ticker => ticker.play())
+    }
+}
+
+function ifGreaterThanZero(value, fn) {
+    const n = Number(value)
+    if (n > 0) {
+        fn(n)
     }
 }

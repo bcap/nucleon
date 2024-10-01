@@ -6,7 +6,7 @@ export class Pressurizer {
         this.heaterPower = 10000
         this.maxHeaterPower = 25000
         this.powerPerDegree = 50
-        this.heaterHeatEfficiency = 0.5
+        this.heaterHeatEfficiency = 0.2
         this.heaterTransferEfficiency = 0.1
         this.waterHeatLoss = 0.002
 

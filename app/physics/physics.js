@@ -63,10 +63,20 @@ export const maxPressure = 160
 export const minTemperature = 1
 export const maxTemperature = 360
 
-export function waterDensity(pressure, temperature) {
+function waterDensityStep(pressure, temperature) {
     pressure = Math.max(minPressure, Math.min(Math.round(pressure), maxPressure))
     temperature = Math.max(minTemperature, Math.min(Math.round(temperature), maxTemperature))
     const temperatureTable = waterDensityTable[pressure - 1]
     const density = temperatureTable[temperature - 1]
     return density
+}
+
+
+export function waterDensity(pressure, temperature) {
+    const loPloT = waterDensityStep(Math.floor(pressure), Math.floor(temperature))
+    const loPhiT = waterDensityStep(Math.floor(pressure), Math.ceil(temperature))
+    const hiPloT = waterDensityStep(Math.ceil(pressure), Math.floor(temperature))
+    const pressureDelta = hiPloT - loPloT
+    const tempDelta = loPhiT - loPloT
+    return loPloT + pressureDelta + tempDelta
 }

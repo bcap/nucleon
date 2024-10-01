@@ -7,7 +7,7 @@ export class Reactor {
         this.desiredControlRodPosition = 0
         this.minRodPosition = 0
         this.maxRodPosition = 250
-        this.rodSpeed = 3 // steps per second
+        this.rodSpeed = 6 // steps per second
 
         this.reactivity = 0
         this.kEff = 0
@@ -28,11 +28,12 @@ export class Reactor {
         this.fuelTemperature = 25
         this.waterTemperature = 25
 
-        this.neutronsPerDegree = 10_000_000_000  // 10 billion neutrons to raise fuel temperature by 1 degree
-        this.resonanceEscapeDropPerFuelDegree = 1 / 20000  // emulates Fuel Temperature Coefficient (FTC)
+        this.neutronsPerDegree = 10_000_000_000                 // 10 billion neutrons to raise fuel temperature by 1 degree
+        this.resonanceEscapeDropPerFuelDegree = 1 / 20000       // emulates Fuel Temperature Coefficient (FTC)
+        this.resonanceEscapeDropPerInverseWaterDensity = 20     // emulates Moderator Temperature Coefficient (MTC)
 
-        this.fuelToWaterHeatTransferRatio = 0.08 // 8% per second
-        this.waterToEnvironmentHeatTransferRatio = 0.22 // 22% per second
+        this.fuelToWaterHeatTransferRatio = 0.08            // 8% per second
+        this.waterToEnvironmentHeatTransferRatio = 0.10     // 10% per second
 
         this.pressure = 1
         this.waterDensity = waterDensity(this.pressure, this.waterTemperature)
@@ -58,7 +59,17 @@ export class Reactor {
 
         // https://www.nuclear-power.com/nuclear-power/reactor-physics/nuclear-fission-chain-reaction/six-factor-formula-effective-multiplication-factor/
         this.thermalUtilizationP = 0.688 + (0.0006 * this.controlRodPosition)
-        this.resonanceEscapeP = 0.75 - ((this.fuelTemperature - 25) * this.resonanceEscapeDropPerFuelDegree)
+        // base value
+        this.resonanceEscapeP = 0.75 
+        // the hotter the fuel, the stronger is the FTC effect
+        this.resonanceEscapeP -= ((this.fuelTemperature - 25) * this.resonanceEscapeDropPerFuelDegree) 
+        // the less dense the water, the stronger the MTC effect
+        this.resonanceEscapeP -= this.resonanceEscapeDropPerInverseWaterDensity / this.waterDensity
+
+        if (this.resonanceEscapeP < 0) {
+            this.resonanceEscapeP = 0
+        }
+
         this.kEff =
             this.fastFissionP *
             this.fastNonLeakageP *
@@ -83,6 +94,10 @@ export class Reactor {
             this.neutronFlux = this.minNeutronFlux
         }
 
+        if (isNaN(this.neutronFlux)) {
+            console.log("NaN neutron flux", this.neutronFlux, timedKEff, generations, this.kEff, this.period, this.medianNeutronLifetimeMs, timePassedMs, this.neutronFlux * timedKEff)
+        }
+
         // fuel and water thermal dynamics
 
         //
@@ -90,28 +105,22 @@ export class Reactor {
         // Slow feedback loop from FTC: Bouncy Reactor, snakes around 0 reactivity, eventually converges
         //
         // increase 1 degree of fuel temperature by every neutronsPerDegree neutrons
-        const fuelTempIncrease = this.neutronFlux / this.neutronsPerDegree * secs
-        if (fuelTempIncrease > 0) {
-            this.fuelTemperature += fuelTempIncrease
-        }
+        // const fuelTempIncrease = this.neutronFlux / this.neutronsPerDegree * secs
+        // if (fuelTempIncrease > 0) {
+        //     this.fuelTemperature += fuelTempIncrease
+        // }
 
         //
         // Option 2:
         // Fast feedback loop from FTC: Reactor quickly converges on zero reactivity
         //
-        // const targetFuelTemperature = 25 + this.neutronFlux / this.neutronsPerDegree;
-        // const [, , transfer] = heatTransfer(targetFuelTemperature, this.fuelTemperature, 0.1, secs);
-        // if (transfer > 0) {
-        //     this.fuelTemperature = targetFuelTemperature;
-        // }
+        const targetFuelTemperature = 25 + this.neutronFlux / this.neutronsPerDegree;
+        const [, newFuelTemperature, transfer] = heatTransfer(targetFuelTemperature, this.fuelTemperature, 1, secs);
+        if (transfer > 0) {
+            this.fuelTemperature = newFuelTemperature;
+        }
 
-        // transfer of heat from fuel to water
-        [this.fuelTemperature, this.waterTemperature,] = heatTransfer(this.fuelTemperature, this.waterTemperature, this.fuelToWaterHeatTransferRatio, secs);
-
-        // water heat loss to environment
-        [this.waterTemperature, ,] = heatTransfer(this.waterTemperature, 25, this.waterToEnvironmentHeatTransferRatio, secs);
-
-        // set density and state
+        // liquid water vs steam mechanics
         this.boilingPoint = waterBoilingTemperatureByPressure(this.pressure)
         if (this.waterTemperature > this.boilingPoint) {
             this.waterState = "steam"
@@ -120,6 +129,13 @@ export class Reactor {
             this.waterState = "liquid"
             this.waterDensity = waterDensity(Math.min(Math.ceil(this.pressure), 160), this.waterTemperature)
         }
+
+        // transfer of heat from fuel to water
+        const fuelToWaterHeatTransferRatio = this.fuelToWaterHeatTransferRatio * (this.waterDensity / 1000);
+        [this.fuelTemperature, this.waterTemperature,] = heatTransfer(this.fuelTemperature, this.waterTemperature, fuelToWaterHeatTransferRatio, secs);
+
+        // water heat loss to environment
+        [this.waterTemperature, ,] = heatTransfer(this.waterTemperature, 25, this.waterToEnvironmentHeatTransferRatio, secs);
     }
 
     moveControlRod(stepsDelta) {

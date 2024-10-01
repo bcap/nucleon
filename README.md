@@ -24,6 +24,9 @@ Roadmap/Progress: [trello.com/b/sKz4CiAl/nucleon](https://trello.com/b/sKz4CiAl/
     - Control rods in real world reactors seems to have a small number of possible steps. Using 250 for the simulation though
     - Control rods are made of Ag-In-Cd: 80% Silver, 15% Indium and 5% Cadmium
 
+- Pressure
+    - Primary loop runs at 155 bars of pressure, where the water boiling point is 345C
+
 - Plant
     - 34% efficiency: To generate 1200MW of electricity, the reactor heat output is around 3500MW. 
         - Extra heat goes to the environment as heated water
@@ -48,7 +51,7 @@ Roadmap/Progress: [trello.com/b/sKz4CiAl/nucleon](https://trello.com/b/sKz4CiAl/
     - Wikipedia on Six Factor Formula: https://en.wikipedia.org/wiki/Six_factor_formula
     - Unknown Course Module on the subject: https://canteach.candu.org/Content%20Library/20041105.pdf
     - Better explanation of Six Factor Formula: https://www.nuclear-power.com/nuclear-power/reactor-physics/nuclear-fission-chain-reaction/six-factor-formula-effective-multiplication-factor/
-    - How operational components influence the Six Factor Formula: https://www.nuclear-power.com/nuclear-power/reactor-physics/nuclear-fission-chain-reaction/operational-factors/
+    - How operational components influence the Six Factor Formula (FTC / MTC / etc): https://www.nuclear-power.com/nuclear-power/reactor-physics/nuclear-fission-chain-reaction/operational-factors/
     - Reactivity: https://www.nuclear-power.com/nuclear-power/reactor-physics/nuclear-fission-chain-reaction/reactivity/
     - Lecture on Six Factor Formula: https://www.youtube.com/watch?v=4gmQXZMzwgs
     - Youtube Series: MIT 22.01 Introduction to Nuclear Engineering and Ionizing Radiation: https://www.youtube.com/playlist?list=PLUl4u3cNGP61FVzAxBP09w2FMQgknTOqu
@@ -58,6 +61,7 @@ Roadmap/Progress: [trello.com/b/sKz4CiAl/nucleon](https://trello.com/b/sKz4CiAl/
     - Heat Transfer (convection) https://en.wikipedia.org/wiki/Convection_(heat_transfer)
     - List of thermal conductivities https://en.wikipedia.org/wiki/List_of_thermal_conductivities
     - Boiling Point calculator https://www.omnicalculator.com/chemistry/boiling-point
+    - Water density anomalies https://water.lsbu.ac.uk/water/density_anomalies.html
 
 - Reddit Posts
     - https://www.reddit.com/r/nuclear/comments/1azxc4e/how_can_i_learn_more_about_nuclear_reactor/
